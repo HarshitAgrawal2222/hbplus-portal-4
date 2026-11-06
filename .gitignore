@@ -1,0 +1,17 @@
+node_modules/
+.expo/
+dist/
+web-build/
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+google-services.json
+GoogleService-Info.plist
+serviceAccountKey*.json
+.firebase/
+functions/node_modules/
+android/
+ios/
+.DS_Store

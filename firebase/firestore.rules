@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Authenticated, email-verified member of the org domain. Checked against the signed token.
+    function isOrgUser() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower().matches('.*@hbplus[.]fit');
+    }
+    function isAdmin() {
+      return isOrgUser() && request.auth.token.role == 'admin';
+    }
+
+    match /users/{uid} {
+      allow read: if isOrgUser() && (request.auth.uid == uid || isAdmin());
+
+      // Self-create only, always as "user", with exactly the expected fields.
+      allow create: if isOrgUser()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','email','role','displayName','photoURL','createdAt','lastLoginAt'])
+        && request.resource.data.uid == uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role == 'user';
+
+      // Self-update may touch profile/login fields only: never role, email, uid or createdAt.
+      allow update: if isOrgUser()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName','photoURL','lastLoginAt']);
+
+      allow delete: if false;
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

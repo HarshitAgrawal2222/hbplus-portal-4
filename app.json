@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "HB Plus Portal",
+    "slug": "hbplus-portal",
+    "scheme": "hbplus",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": { "bundleIdentifier": "fit.hbplus.portal", "googleServicesFile": "./GoogleService-Info.plist" },
+    "android": { "package": "fit.hbplus.portal", "googleServicesFile": "./google-services.json" },
+    "web": { "bundler": "metro", "output": "single" },
+    "plugins": [
+      "expo-router",
+      "@react-native-google-signin/google-signin"
+    ]
+  }
+}
